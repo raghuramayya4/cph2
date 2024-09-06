@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Project Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f0f8ff, #e6e6fa);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar button {
+            background: #ec3232;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .navbar button:hover {
+            background: #ec3232b1;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        section {
+            width: 80%;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: black;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        #projectsList, #checkProjectsList, #studentsProfileList {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .project, .student-profile {
+            background: #696969;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.5s, opacity 0.5s;
+        }
+
+        .project h3, .student-profile h3 {
+            margin: 0;
+            font-size: 1.5em;
+            color: white;
+        }
+
+        .project p, .student-profile p {
+            font-size: 1.1em;
+            margin: 10px 0;
+            color: white;
+        }
+
+        .project:hover, .student-profile:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <button onclick="scrollToSection('projectsSection')" style="color: white;">View Projects</button>
+        <button onclick="scrollToSection('checkProjectsSection')" style="color: white;">Check Projects</button>
+        <button onclick="scrollToSection('studentsProfileSection')" style="color: white;">Profile</button>
+
+    </div>
+
+    <!-- View Projects Section -->
+    <section id="projectsSection">
+        <h1 style="color: white;">Submitted Projects</h1>
+        <div id="projectsList"></div>
+    </section>
+
+    <!-- Check Projects Section -->
+    <section id="checkProjectsSection">
+        <h1 style="color: white;">Check Projects</h1>
+        <div id="checkProjectsList"></div>
+    </section>
+
+    <!-- Submitted Students Profile Section -->
+    <section id="studentsProfileSection">
+        <h1 style="color: white;">Profile</h1>
+        <div id="studentsProfileList"></div>
+    </section>
+
+    <section id="studentsProfileSection"></section>
+        <a href="final_proj.html"><h1 style="color: white;">Add Final Year Projects</h1></a>
+        <div id="studentsProfileList"></div>
+    </section>
+
+    <script>
+        function fetchProjects() {
+            fetch('/projects')
+                .then(response => response.json())
+                .then(projects => {
+                    const projectsList = document.getElementById('projectsList');
+                    projectsList.innerHTML = '';
+
+                    projects.forEach((project, index) => {
+                        const projectElement = document.createElement('div');
+                        projectElement.classList.add('project');
+                        projectElement.style.animation = `fadeIn 0.5s ease-out ${index * 0.2}s forwards`;
+                        projectElement.innerHTML = `
+                            <h3>Idea Name: ${project.idea_name}</h3>
+                            <p>Category: ${project.idea_category}</p>
+                            <p>Domain: ${project.idea_domain}</p>
+                            <p>Description: ${project.idea_desc}</p>
+                        `;
+                        projectsList.appendChild(projectElement);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching projects:', error);
+                });
+        }
+
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Call fetchProjects when the page loads
+        window.onload = fetchProjects;
+    </script>
+</body>
+</html>

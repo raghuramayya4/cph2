@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Project</title>
+</head>
+<body>
+    <h1>Submit Your Project</h1>
+    <form id="projectForm">
+        <label for="projectType">Project Type:</label>
+        <select id="projectType" name="projectType" required>
+            <option value="">--Select Type--</option>
+            <option value="hardware">Hardware</option>
+            <option value="software">Software</option>
+        </select>
+
+        <label for="projectDescription">Project Description:</label>
+        <textarea id="projectDescription" name="projectDescription" rows="4" required></textarea>
+
+        <button type="submit">Submit Project</button>
+    </form>
+
+    <script>
+        document.getElementById('projectForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const projectType = document.getElementById('projectType').value;
+            const projectDescription = document.getElementById('projectDescription').value;
+
+            fetch('http://localhost:3000/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    projectType,
+                    projectDescription
+                })
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                document.getElementById('projectForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting project. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>
